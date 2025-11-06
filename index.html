@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AR Video NFT</title>
+    <title>AR NFT Video</title>
     
     <script src="https://cdn.jsdelivr.net/gh/aframevr/aframe@1c2407b26c61958baa93967b5412487cd94b290b/dist/aframe-master.min.js"></script>
     <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar-nft.js"></script>
@@ -34,7 +34,6 @@
         <div>Loading, please wait...</div>
     </div>
     
-    <!-- Assets -->
     <a-scene
         vr-mode-ui="enabled: false;"
         renderer="logarithmicDepthBuffer: true;"
@@ -67,6 +66,7 @@
     </a-scene>
     
     <script>
+        // Composant pour gérer la vidéo
         AFRAME.registerComponent('videohandler', {
             init: function () {
                 var marker = this.el;
@@ -78,10 +78,24 @@
                 
                 marker.addEventListener('markerLost', function() {
                     this.vid.pause();
-                    this.vid.currentTime = 0;
                 }.bind(this));
             }
         });
+        
+        // Cacher le loader quand les marqueurs NFT sont chargés
+        window.addEventListener('arjs-nft-loaded', function() {
+            console.log('NFT markers loaded');
+            document.querySelector('.arjs-loader').style.display = 'none';
+        });
+        
+        // Timeout de sécurité (15 secondes)
+        setTimeout(function() {
+            var loader = document.querySelector('.arjs-loader');
+            if (loader && loader.style.display !== 'none') {
+                console.warn('Loader removed after timeout - check console for errors');
+                loader.style.display = 'none';
+            }
+        }, 15000);
     </script>
 </body>
 </html>
