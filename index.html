@@ -38,16 +38,16 @@
         vr-mode-ui="enabled: false;"
         renderer="logarithmicDepthBuffer: true;"
         embedded
-        arjs="trackingMethod: best; sourceType: webcam; debugUIEnabled: false;">
+        arjs="trackingMethod: best; sourceType: webcam; debugUIEnabled: true;">
         
         <a-assets>
-            <video id="vid" src="assets/video.mp4" preload="auto" loop crossorigin="anonymous" webkit-playsinline playsinline></video>
+            <video id="vid" src="assets/video.mp4" preload="auto" loop crossorigin="anonymous" webkit-playsinline playsinline muted></video>
         </a-assets>
         
         <a-nft
             videohandler
             type="nft"
-            url="assets/pinball"
+            url="assets/ashram_09"
             smooth="true"
             smoothCount="10"
             smoothTolerance=".01"
@@ -55,8 +55,8 @@
             
             <a-video
                 src="#vid"
-                width="4"
-                height="3"
+                width="1"
+                height="1"
                 position="0 0 0"
                 rotation="-90 0 0">
             </a-video>
@@ -66,33 +66,32 @@
     </a-scene>
     
     <script>
-        // Composant pour gérer la vidéo
         AFRAME.registerComponent('videohandler', {
             init: function () {
                 var marker = this.el;
                 this.vid = document.querySelector("#vid");
                 
                 marker.addEventListener('markerFound', function () {
+                    console.log('Marker detected - Playing video');
                     this.vid.play();
                 }.bind(this));
                 
                 marker.addEventListener('markerLost', function() {
+                    console.log('Marker lost - Pausing video');
                     this.vid.pause();
                 }.bind(this));
             }
         });
         
-        // Cacher le loader quand les marqueurs NFT sont chargés
         window.addEventListener('arjs-nft-loaded', function() {
-            console.log('NFT markers loaded');
+            console.log('NFT markers loaded successfully');
             document.querySelector('.arjs-loader').style.display = 'none';
         });
         
-        // Timeout de sécurité (15 secondes)
         setTimeout(function() {
             var loader = document.querySelector('.arjs-loader');
             if (loader && loader.style.display !== 'none') {
-                console.warn('Loader removed after timeout - check console for errors');
+                console.warn('Loader removed after timeout');
                 loader.style.display = 'none';
             }
         }, 15000);
